@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "287799798736",
+    "project_id": "electrodelivery-7dcfa",
+    "storage_bucket": "electrodelivery-7dcfa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:287799798736:android:1ef017bd2033b9a53f67d5",
+        "android_client_info": {
+          "package_name": "com.example.food_delivery_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1TUdjTWp81trG9L6bqYvzSzUXrV5vZbg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
