@@ -7,7 +7,7 @@ class OnBoard {
 List<OnBoard> onboards = [
   OnBoard(
     image: 'assets/food-delivery(foodel)',
-    text1: 'Grab your\nfast electro !',
+    text1: 'Grab your\nfast electroni !',
     text2: 'Delivery electro in your phone',
   ),
   OnBoard(
