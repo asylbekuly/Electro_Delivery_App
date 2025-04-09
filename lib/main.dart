@@ -9,7 +9,7 @@ import 'View/onboard_page.dart';
 import 'View/main_page.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Ожидаем инициализацию
+  WidgetsFlutterBinding.ensureInitialized(); 
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: FirebaseOptions(
@@ -23,7 +23,7 @@ void main() async {
       ),
     );
   } else {
-    await Firebase.initializeApp(); // Для мобильных устройств
+    await Firebase.initializeApp();
   }
 
   runApp(const MyApp());
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Electronics Delivery App',
-            theme: lightTheme, // Ваши темы
+            theme: lightTheme, 
             darkTheme: darkTheme,
             themeMode: themeProvider.currentTheme,
             home: const AppOnBoardPage(),

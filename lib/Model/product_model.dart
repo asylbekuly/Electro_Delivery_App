@@ -19,30 +19,30 @@ class MyProductModel {
     required this.distance,
   });
 
-  // Преобразование Map в модель с проверками на null
+
   factory MyProductModel.fromMap(Map<String, dynamic> map, String id) {
     return MyProductModel(
       id: id,
-      image: map['image'] ?? '', // Используем пустую строку, если значение null
-      name: map['name'] ?? '', // Используем пустую строку, если значение null
+      image: map['image'] ?? '', 
+      name: map['name'] ?? '', 
       category: map['category'] ?? '',
       description: map['description'] ?? '',
       price:
           (map['price'] is String)
               ? double.tryParse(map['price']) ?? 0.0
-              : map['price'] ?? 0.0, // Преобразование строки в double
+              : map['price'] ?? 0.0, 
       rate:
           (map['rate'] is String)
               ? double.tryParse(map['rate']) ?? 0.0
-              : map['rate'] ?? 0.0, // Преобразование строки в double
+              : map['rate'] ?? 0.0, 
       distance:
           (map['distance'] is String)
               ? double.tryParse(map['distance']) ?? 0.0
-              : map['distance'] ?? 0.0, // Преобразование строки в double
+              : map['distance'] ?? 0.0, 
     );
   }
 
-  // Преобразование модели в Map для Firestore
+  
   Map<String, dynamic> toMap() {
     return {
       'image': image,

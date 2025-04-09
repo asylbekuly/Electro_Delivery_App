@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery_app/Model/bottom_icon_model.dart';  // Исправленный путь
-import 'package:food_delivery_app/View/home_page.dart';  // Исправленный путь
-import 'package:food_delivery_app/consts.dart';  // Исправленный путь
-import 'package:food_delivery_app/View/profile_page.dart';  // Исправленный путь
+import 'package:food_delivery_app/Model/bottom_icon_model.dart';  
+import 'package:food_delivery_app/View/home_page.dart';  
+import 'package:food_delivery_app/consts.dart';  
+import 'package:food_delivery_app/View/profile_page.dart'; 
 
 
 class MainPage extends StatefulWidget {

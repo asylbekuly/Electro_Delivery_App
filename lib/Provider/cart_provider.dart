@@ -3,16 +3,15 @@ import 'package:food_delivery_app/Model/cart_model.dart';
 import 'package:food_delivery_app/Model/product_model.dart';
 
 class CartProvider with ChangeNotifier {
-  // private list _carts to store cart items, each represented by a cartModel
+
   List<CartModel> _carts = [];
 
-  // getter for _Carts to access the list of cart items
+  
   List<CartModel> get carts => _carts;
 
-  // setter for _Carts. updates the cart list and notifies listeners when it changes.
   set carts(List<CartModel> carts) {
     _carts = carts;
-    notifyListeners(); // Notifies any widgets listening to this provider to rebuild.
+    notifyListeners(); 
   }
 
   // Adds a product to the cart.
