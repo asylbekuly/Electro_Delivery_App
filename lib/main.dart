@@ -5,11 +5,11 @@ import 'package:provider/provider.dart';
 
 import 'Provider/cart_provider.dart';
 import 'Provider/theme_provider.dart';
-import 'View/onboard_page.dart';
 import 'View/main_page.dart';
 import 'Theme/fade_page_transition.dart';
 import 'View/favorites_page.dart';
 import 'Provider/favorite_provider.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
             themeMode: themeProvider.currentTheme,
-            home: const AppOnBoardPage(),
+            home: const MainPage(), 
             routes: {
               '/main': (context) => const MainPage(),
               '/favorites': (context) => const FavoritesPage(),

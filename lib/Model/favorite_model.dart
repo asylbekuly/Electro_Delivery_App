@@ -3,12 +3,16 @@ class FavoriteModel {
   final String name;
   final String image;
   final double price;
+  final double? rate;
+  final double? distance;
 
   FavoriteModel({
     this.id,
     required this.name,
     required this.image,
     required this.price,
+    required this.rate,
+    required this.distance,
   });
 
   Map<String, dynamic> toMap() {
@@ -17,6 +21,8 @@ class FavoriteModel {
       'name': name,
       'image': image,
       'price': price,
+      'rate': rate,
+      'distance': distance,
     };
   }
 
@@ -25,7 +31,9 @@ class FavoriteModel {
       id: map['id'],
       name: map['name'],
       image: map['image'],
-      price: map['price'],
+      price: map['price'], 
+      rate: map['rate'],
+      distance: map['distance'],
     );
   }
 }

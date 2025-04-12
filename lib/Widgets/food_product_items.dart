@@ -143,6 +143,8 @@ class FoodProductItems extends StatelessWidget {
                   name: productModel.name,
                   image: productModel.image,
                   price: productModel.price,
+                  rate: productModel.rate,
+                  distance: productModel.distance,
                 );
 
                 Provider.of<FavoriteProvider>(
