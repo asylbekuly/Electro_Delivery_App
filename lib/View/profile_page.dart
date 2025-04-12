@@ -39,7 +39,7 @@ class ProfilePage extends StatelessWidget {
             const CircleAvatar(
               radius: 50,
               backgroundImage: AssetImage(
-                'assets/food-delivery(foodel)/profile_avatar.png',
+                'assets/food-delivery(foodel)/me2024.jpg',
               ),
             ),
             const SizedBox(height: 20),
