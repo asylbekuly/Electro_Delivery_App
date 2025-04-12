@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-
 import 'package:food_delivery_app/Model/product_model.dart';
 import 'package:food_delivery_app/Provider/cart_provider.dart';
 import 'package:food_delivery_app/View/product_detail_page.dart';
@@ -10,6 +9,7 @@ import 'package:food_delivery_app/Model/favorite_model.dart';
 import 'package:food_delivery_app/Services/favorite_service.dart';
 import 'package:food_delivery_app/Services/favorite_service_sqlite.dart';
 import 'package:food_delivery_app/Services/favorite_service_web.dart';
+import 'package:food_delivery_app/Provider/favorite_provider.dart';
 
 class FoodProductItems extends StatelessWidget {
   final MyProductModel productModel;
@@ -19,8 +19,6 @@ class FoodProductItems extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     CartProvider cartProvider = Provider.of<CartProvider>(context);
-    final FavoriteService favoriteService =
-        kIsWeb ? FavoriteServiceWeb() : FavoriteServiceSQLite();
 
     return GestureDetector(
       onTap: () {
@@ -102,11 +100,9 @@ class FoodProductItems extends StatelessWidget {
                       Text(
                         productModel.rate.toString(),
                         style: TextStyle(
-                          color: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .color!
-                              .withOpacity(0.6),
+                          color: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium!.color!.withOpacity(0.6),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -115,11 +111,9 @@ class FoodProductItems extends StatelessWidget {
                       Text(
                         "${productModel.distance}m",
                         style: TextStyle(
-                          color: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .color!
-                              .withOpacity(0.6),
+                          color: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium!.color!.withOpacity(0.6),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -150,11 +144,16 @@ class FoodProductItems extends StatelessWidget {
                   image: productModel.image,
                   price: productModel.price,
                 );
-                await favoriteService.addFavorite(favorite);
+
+                Provider.of<FavoriteProvider>(
+                  context,
+                  listen: false,
+                ).addFavorite(favorite);
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Добавлено в избранное")),
                 );
-              },
+              }, // <-- здесь ты пропустил запятую/закрытие функции
               child: Container(
                 padding: const EdgeInsets.all(6),
                 decoration: const BoxDecoration(

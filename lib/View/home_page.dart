@@ -8,6 +8,8 @@ import 'package:food_delivery_app/View/cart.dart';
 import 'package:food_delivery_app/Widgets/food_product_items.dart';
 import 'package:food_delivery_app/consts.dart';
 import 'package:food_delivery_app/Provider/firebase_service.dart';
+import 'package:food_delivery_app/View/favorites_page.dart';
+import 'package:food_delivery_app/Provider/favorite_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,9 +19,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String category = "Phone";  
+  String category = "Phone";
   List<MyProductModel> allProducts = [];
-  List<MyProductModel> productModel = []; 
+  List<MyProductModel> productModel = [];
   List<CategoryModel> categories = [];
 
   @override
@@ -50,10 +52,14 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       category = selectedCategory;
       // Фильтруем продукты по категории
-      productModel = allProducts
-          .where((element) =>
-              element.category.toLowerCase() == selectedCategory.toLowerCase())
-          .toList();
+      productModel =
+          allProducts
+              .where(
+                (element) =>
+                    element.category.toLowerCase() ==
+                    selectedCategory.toLowerCase(),
+              )
+              .toList();
     });
   }
 
@@ -83,28 +89,28 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Text(
                             "Your Location",
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.color
-                                          ?.withOpacity(0.5),
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(
+                                context,
+                              ).textTheme.bodySmall?.color?.withOpacity(0.5),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Row(
                             children: [
-                              const Icon(Icons.location_on,
-                                  color: korange, size: 20),
+                              const Icon(
+                                Icons.location_on,
+                                color: korange,
+                                size: 20,
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 "Astana, Kazakhstan",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
+                                style: Theme.of(context).textTheme.bodyLarge
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -113,9 +119,57 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         _iconButton(Icons.search, context),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 6),
+
+                        Consumer<FavoriteProvider>(
+                          builder: (context, favProvider, _) {
+                            return Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const FavoritesPage(),
+                                      ),
+                                    );
+                                  },
+                                  child: _iconButton(
+                                    Icons.favorite_border,
+                                    context,
+                                  ),
+                                ),
+                                if (favProvider.favorites.isNotEmpty)
+                                  Positioned(
+                                    right: -2,
+                                    top: -2,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.red,
+                                      ),
+                                      child: Text(
+                                        favProvider.favorites.length.toString(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
+                        ),
+
+                        const SizedBox(width: 6),
+
+                        // 🛒 Корзина
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -125,13 +179,16 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: Stack(
                             children: [
-                              _iconButton(Icons.shopping_cart_outlined, context),
+                              _iconButton(
+                                Icons.shopping_cart_outlined,
+                                context,
+                              ),
                               if (cartProvider.carts.isNotEmpty)
                                 Positioned(
                                   right: 0,
                                   top: 0,
                                   child: Container(
-                                    padding: const EdgeInsets.all(5),
+                                    padding: const EdgeInsets.all(4),
                                     decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Colors.red,
@@ -140,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                                       cartProvider.carts.length.toString(),
                                       style: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 12,
+                                        fontSize: 10,
                                       ),
                                     ),
                                   ),
@@ -148,7 +205,10 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        const SizedBox(width: 10),
+
+                        const SizedBox(width: 6),
+
+                        // 🌙 Переключатель темы
                         IconButton(
                           icon: Icon(
                             isDark ? Icons.light_mode : Icons.dark_mode,
@@ -172,8 +232,8 @@ class _HomePageState extends State<HomePage> {
                 child: Text(
                   "Let's find the best electronics around you",
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
 
@@ -188,8 +248,8 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       "Find by Category",
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const Text("See All", style: TextStyle(color: korange)),
                   ],
@@ -216,9 +276,10 @@ class _HomePageState extends State<HomePage> {
                         decoration: BoxDecoration(
                           color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(12),
-                          border: isSelected
-                              ? Border.all(color: korange, width: 2)
-                              : Border.all(color: Colors.grey.shade300),
+                          border:
+                              isSelected
+                                  ? Border.all(color: korange, width: 2)
+                                  : Border.all(color: Colors.grey.shade300),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -230,10 +291,10 @@ class _HomePageState extends State<HomePage> {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.color,
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge?.color,
                               ),
                             ),
                           ],
@@ -251,13 +312,11 @@ class _HomePageState extends State<HomePage> {
                 child: Text(
                   "Result (${productModel.length})",
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.color
-                            ?.withOpacity(0.6),
-                      ),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.color?.withOpacity(0.6),
+                  ),
                 ),
               ),
 
@@ -271,8 +330,7 @@ class _HomePageState extends State<HomePage> {
                   itemCount: productModel.length,
                   separatorBuilder: (_, __) => const SizedBox(width: 20),
                   itemBuilder: (context, index) {
-                    return FoodProductItems(
-                        productModel: productModel[index]);
+                    return FoodProductItems(productModel: productModel[index]);
                   },
                 ),
               ),

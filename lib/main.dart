@@ -9,7 +9,7 @@ import 'View/onboard_page.dart';
 import 'View/main_page.dart';
 import 'Theme/fade_page_transition.dart';
 import 'View/favorites_page.dart';
-
+import 'Provider/favorite_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => FavoriteProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {
