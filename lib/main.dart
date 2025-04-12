@@ -7,9 +7,11 @@ import 'Provider/cart_provider.dart';
 import 'Provider/theme_provider.dart';
 import 'View/onboard_page.dart';
 import 'View/main_page.dart';
+import 'Theme/fade_page_transition.dart';
+import 'View/favorites_page.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: FirebaseOptions(
@@ -44,11 +46,28 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Electronics Delivery App',
-            theme: lightTheme, 
-            darkTheme: darkTheme,
+            theme: lightTheme.copyWith(
+              pageTransitionsTheme: const PageTransitionsTheme(
+                builders: {
+                  TargetPlatform.android: FadePageTransitionsBuilder(),
+                  TargetPlatform.iOS: FadePageTransitionsBuilder(),
+                },
+              ),
+            ),
+            darkTheme: darkTheme.copyWith(
+              pageTransitionsTheme: const PageTransitionsTheme(
+                builders: {
+                  TargetPlatform.android: FadePageTransitionsBuilder(),
+                  TargetPlatform.iOS: FadePageTransitionsBuilder(),
+                },
+              ),
+            ),
             themeMode: themeProvider.currentTheme,
             home: const AppOnBoardPage(),
-            routes: {'/main': (context) => const MainPage()},
+            routes: {
+              '/main': (context) => const MainPage(),
+              '/favorites': (context) => const FavoritesPage(),
+            },
           );
         },
       ),

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:food_delivery_app/Model/product_model.dart';
 import 'package:food_delivery_app/Provider/cart_provider.dart';
 import 'package:food_delivery_app/View/product_detail_page.dart';
 import 'package:food_delivery_app/consts.dart';
+import 'package:food_delivery_app/Model/favorite_model.dart';
+import 'package:food_delivery_app/Services/favorite_service.dart';
+import 'package:food_delivery_app/Services/favorite_service_sqlite.dart';
+import 'package:food_delivery_app/Services/favorite_service_web.dart';
 
 class FoodProductItems extends StatelessWidget {
   final MyProductModel productModel;
@@ -13,6 +19,8 @@ class FoodProductItems extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     CartProvider cartProvider = Provider.of<CartProvider>(context);
+    final FavoriteService favoriteService =
+        kIsWeb ? FavoriteServiceWeb() : FavoriteServiceSQLite();
 
     return GestureDetector(
       onTap: () {
@@ -37,9 +45,7 @@ class FoodProductItems extends StatelessWidget {
           Container(
             height: 285,
             width: size.width / 2.4,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(
@@ -67,7 +73,10 @@ class FoodProductItems extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Image.asset(productModel.image, height: 150),
+                        Hero(
+                          tag: productModel.image,
+                          child: Image.asset(productModel.image, height: 150),
+                        ),
                       ],
                     ),
                   ),
@@ -84,7 +93,11 @@ class FoodProductItems extends StatelessWidget {
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      const Icon(Icons.star_rate_rounded, color: kyellow, size: 22),
+                      const Icon(
+                        Icons.star_rate_rounded,
+                        color: kyellow,
+                        size: 22,
+                      ),
                       const SizedBox(width: 5),
                       Text(
                         productModel.rate.toString(),
@@ -125,6 +138,39 @@ class FoodProductItems extends StatelessWidget {
               ),
             ),
           ),
+
+          // ❤️ Иконка "в избранное"
+          Positioned(
+            top: 8,
+            right: 8,
+            child: GestureDetector(
+              onTap: () async {
+                final favorite = FavoriteModel(
+                  name: productModel.name,
+                  image: productModel.image,
+                  price: productModel.price,
+                );
+                await favoriteService.addFavorite(favorite);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Добавлено в избранное")),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: const BoxDecoration(
+                  color: Colors.redAccent,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.favorite_border,
+                  color: Colors.white,
+                  size: 18,
+                ),
+              ),
+            ),
+          ),
+
+          // 🛒 Иконка "в корзину"
           Positioned(
             bottom: 0,
             right: 0,

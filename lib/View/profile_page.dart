@@ -77,6 +77,16 @@ class ProfilePage extends StatelessWidget {
             ),
             Divider(color: Theme.of(context).dividerColor),
             ListTile(
+              leading: Icon(Icons.favorite, color: textColor),
+              title: Text("Favorites", style: TextStyle(color: textColor)),
+              trailing: Icon(Icons.arrow_forward_ios,
+                  size: 16, color: textColor?.withOpacity(0.6)),
+              onTap: () {
+                Navigator.pushNamed(context, '/favorites');
+              },
+            ),
+            Divider(color: Theme.of(context).dividerColor),
+            ListTile(
               leading: const Icon(Icons.logout, color: Colors.red),
               title: const Text("Logout",
                   style: TextStyle(color: Colors.red)),
