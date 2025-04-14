@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/Model/bottom_icon_model.dart';  
-import 'package:food_delivery_app/View/home_page.dart';  
+import 'package:food_delivery_app/View/home_page.dart';
+import 'package:food_delivery_app/View/news_page.dart';  
 import 'package:food_delivery_app/consts.dart';  
 import 'package:food_delivery_app/View/profile_page.dart'; 
 
@@ -16,7 +17,7 @@ class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
   final List selectedPage = [
     const HomePage(),
-    const Center(child: Text("Message Page")),
+    const NewsPage(),
     const Center(child: Text("Explore Page")),
     const ProfilePage(),
   ];

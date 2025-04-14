@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'View/news_page.dart';
 import 'Provider/cart_provider.dart';
 import 'Provider/theme_provider.dart';
 import 'View/main_page.dart';
@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
+
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
             routes: {
               '/main': (context) => const MainPage(),
               '/favorites': (context) => const FavoritesPage(),
+              '/news': (context) => const NewsPage(),
             },
           );
         },
