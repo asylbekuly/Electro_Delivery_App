@@ -40,7 +40,8 @@ flutter {
 }
 
 dependencies {
-    implementation("com.google.firebase:firebase-analytics:19.0.0") // Пример зависимости для Firebase
-    implementation("com.google.firebase:firebase-auth:21.0.1") // Для аутентификации Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.12.0")) // BOM контролирует версии
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
 }
+

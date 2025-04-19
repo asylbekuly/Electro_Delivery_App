@@ -9,7 +9,8 @@ import 'View/main_page.dart';
 import 'Theme/fade_page_transition.dart';
 import 'View/favorites_page.dart';
 import 'Provider/favorite_provider.dart';
-
+import 'View/edit_profile_page.dart';
+import 'View/map_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
               '/main': (context) => const MainPage(),
               '/favorites': (context) => const FavoritesPage(),
               '/news': (context) => const NewsPage(),
+              '/map': (context) => const MapPage()
             },
           );
         },

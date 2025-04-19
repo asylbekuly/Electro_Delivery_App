@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:food_delivery_app/Model/cart_model.dart';
-import 'package:food_delivery_app/Provider/cart_provider.dart'; // Импорт страницы деталей
+import 'package:food_delivery_app/Provider/cart_provider.dart';
 import 'package:food_delivery_app/View/product_detail_page.dart';
 
 class CartItems extends StatelessWidget {
@@ -26,14 +26,14 @@ class CartItems extends StatelessWidget {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Удалить товар'),
+            title: const Text('Remove from cart'),
             content: const Text(
-              'Вы уверены, что хотите удалить этот товар из корзины?',
+              'Are you sure you want to remove this item from the cart?',
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Отмена'),
+                child: const Text('Cancel'),
               ),
               TextButton(
                 onPressed: () {
@@ -41,7 +41,7 @@ class CartItems extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 child: const Text(
-                  'Удалить',
+                  'Remove',
                   style: TextStyle(color: Colors.red),
                 ),
               ),

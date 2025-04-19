@@ -18,7 +18,7 @@ class ProductDetailPage extends StatelessWidget {
           children: [
             Center(
               child: Hero(
-                tag: product.image, // Тот же тег
+                tag: product.image, 
                 child: Image.asset(product.image, height: 200),
               ),
             ),

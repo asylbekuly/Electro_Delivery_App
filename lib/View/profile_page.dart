@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery_app/consts.dart';
+import 'edit_profile_page.dart'; // не забудь импорт, если в отдельной папке
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  String name = 'Rabat Karabek';
+  String email = 'rabat@email.com';
 
   @override
   Widget build(BuildContext context) {
@@ -36,24 +44,30 @@ class ProfilePage extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage(
-                'assets/food-delivery(foodel)/me2024.jpg',
+            GestureDetector(
+              onTap: _navigateToEditProfile,
+              child: const CircleAvatar(
+                radius: 50,
+                backgroundImage: AssetImage(
+                  'assets/food-delivery(foodel)/me2024.jpg',
+                ),
               ),
             ),
             const SizedBox(height: 20),
-            Text(
-              "Rabat Karabek",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: textColor,
+            GestureDetector(
+              onTap: _navigateToEditProfile,
+              child: Text(
+                name,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
               ),
             ),
             const SizedBox(height: 5),
             Text(
-              "rabat@email.com",
+              email,
               style: TextStyle(
                 fontSize: 16,
                 color: textColor?.withOpacity(0.6),
@@ -96,5 +110,23 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _navigateToEditProfile() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProfilePage(
+          initialName: name,
+          initialEmail: email,
+        ),
+      ),
+    );
+    if (result is Map) {
+      setState(() {
+        name = result['name'] ?? name;
+        email = result['email'] ?? email;
+      });
+    }
   }
 }

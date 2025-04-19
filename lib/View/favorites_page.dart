@@ -48,7 +48,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     final textColor = Theme.of(context).textTheme.bodyLarge?.color;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Избранное"),
+        title: const Text("Favourites"),
         centerTitle: true,
         actions: [
           if (favorites.isNotEmpty)
@@ -62,7 +62,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
           favorites.isEmpty
               ? const Center(
                 child: Text(
-                  "Нет избранных товаров",
+                  "No favorites yet",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
               )
@@ -80,14 +80,14 @@ class _FavoritesPageState extends State<FavoritesPage> {
                           context: context,
                           builder:
                               (context) => AlertDialog(
-                                title: const Text('Удалить из избранного'),
+                                title: const Text('Delete Favorite'),
                                 content: const Text(
-                                  'Вы уверены, что хотите удалить этот товар?',
+                                  'Aere you sure you want to delete this favorite?',
                                 ),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(context),
-                                    child: const Text('Отмена'),
+                                    child: const Text('Cancel'),
                                   ),
                                   TextButton(
                                     onPressed: () {
@@ -95,7 +95,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                                       Navigator.pop(context);
                                     },
                                     child: const Text(
-                                      'Удалить',
+                                      'Remove',
                                       style: TextStyle(color: Colors.red),
                                     ),
                                   ),

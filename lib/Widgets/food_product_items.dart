@@ -153,7 +153,7 @@ class FoodProductItems extends StatelessWidget {
                 ).addFavorite(favorite);
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Добавлено в избранное")),
+                  const SnackBar(content: Text("Added to favorites")),
                 );
               }, // <-- здесь ты пропустил запятую/закрытие функции
               child: Container(

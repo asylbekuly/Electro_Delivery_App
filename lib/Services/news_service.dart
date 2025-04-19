@@ -45,7 +45,7 @@ class NewsService {
           .map((articleJson) => NewsArticle.fromJson(articleJson))
           .toList();
     } else {
-      throw Exception('Не удалось загрузить новости');
+      throw Exception('No News Found');
     }
   }
 }

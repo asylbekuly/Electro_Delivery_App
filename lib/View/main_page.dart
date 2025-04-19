@@ -4,6 +4,7 @@ import 'package:food_delivery_app/View/home_page.dart';
 import 'package:food_delivery_app/View/news_page.dart';  
 import 'package:food_delivery_app/consts.dart';  
 import 'package:food_delivery_app/View/profile_page.dart'; 
+import 'package:food_delivery_app/View/map_page.dart';
 
 
 class MainPage extends StatefulWidget {
@@ -18,7 +19,7 @@ class _MainPageState extends State<MainPage> {
   final List selectedPage = [
     const HomePage(),
     const NewsPage(),
-    const Center(child: Text("Explore Page")),
+    const MapPage(),
     const ProfilePage(),
   ];
   @override
