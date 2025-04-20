@@ -6,8 +6,9 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:7.0.4") // Версия плагина для Android
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.30") // Плагин для Kotlin
-        classpath("com.google.gms.google-services:4.4.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0")
+        classpath("com.google.gms:google-services:4.4.2") // ✅ ПРАВИЛЬНО
+
     }
 }
 
