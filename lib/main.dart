@@ -1,16 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'View/news_page.dart';
 import 'Provider/cart_provider.dart';
 import 'Provider/theme_provider.dart';
-import 'View/main_page.dart';
-import 'Theme/fade_page_transition.dart';
-import 'View/favorites_page.dart';
 import 'Provider/favorite_provider.dart';
-import 'View/edit_profile_page.dart';
+import 'Theme/fade_page_transition.dart';
+import 'View/auth/login_screen.dart';
+import 'View/home_page.dart';
+import 'View/favorites_page.dart';
+import 'View/news_page.dart';
 import 'View/map_page.dart';
+import 'View/main_page.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
@@ -42,7 +45,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
-
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {
@@ -66,16 +68,37 @@ class MyApp extends StatelessWidget {
               ),
             ),
             themeMode: themeProvider.currentTheme,
-            home: const MainPage(), 
+            home: const AuthGate(),
             routes: {
-              '/main': (context) => const MainPage(),
               '/favorites': (context) => const FavoritesPage(),
               '/news': (context) => const NewsPage(),
-              '/map': (context) => const MapPage()
+              '/map': (context) => const MapPage(),
             },
           );
         },
       ),
+    );
+  }
+}
+
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        } else if (snapshot.hasData) {
+          return const MainPage(); // Переход если авторизован
+        } else {
+          return LoginScreen(); // Переход если не авторизован
+        }
+      },
     );
   }
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Database/avatar_db.dart';
-
 
 class EditProfilePage extends StatefulWidget {
   final String initialName;
@@ -54,6 +55,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future<void> _saveToFirebase() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        'name': name,
+        'email': email,
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final textColor = Theme.of(context).textTheme.bodyLarge!.color;
@@ -96,8 +107,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   _formKey.currentState!.save();
+                  await _saveToFirebase();
                   Navigator.pop(context, {
                     'name': name,
                     'email': email,

@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:food_delivery_app/View/auth/login_screen.dart';
 import 'edit_profile_page.dart'; // не забудь импорт, если в отдельной папке
+import 'package:food_delivery_app/View/auth/login_screen.dart';
+import 'package:food_delivery_app/main.dart';
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -9,8 +15,29 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String name = 'Rabat Karabek';
-  String email = 'rabat@email.com';
+  String name = 'Loading...';
+  String email = 'Loading...';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+      setState(() {
+        name = doc['name'] ?? 'No Name';
+        email = doc['email'] ?? user.email!;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +49,21 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
-        leading: canPop
-            ? IconButton(
-                icon: Icon(Icons.arrow_back,
-                    color: Theme.of(context).iconTheme.color),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            : null,
+        leading:
+            canPop
+                ? IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+                : null,
         title: Text(
           "Profile",
-          style: TextStyle(
-            color: textColor,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -77,24 +104,22 @@ class _ProfilePageState extends State<ProfilePage> {
             ListTile(
               leading: Icon(Icons.settings, color: textColor),
               title: Text("Settings", style: TextStyle(color: textColor)),
-              trailing: Icon(Icons.arrow_forward_ios,
-                  size: 16, color: textColor?.withOpacity(0.6)),
-              onTap: () {},
-            ),
-            Divider(color: Theme.of(context).dividerColor),
-            ListTile(
-              leading: Icon(Icons.info, color: textColor),
-              title: Text("About", style: TextStyle(color: textColor)),
-              trailing: Icon(Icons.arrow_forward_ios,
-                  size: 16, color: textColor?.withOpacity(0.6)),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: textColor?.withOpacity(0.6),
+              ),
               onTap: () {},
             ),
             Divider(color: Theme.of(context).dividerColor),
             ListTile(
               leading: Icon(Icons.favorite, color: textColor),
               title: Text("Favorites", style: TextStyle(color: textColor)),
-              trailing: Icon(Icons.arrow_forward_ios,
-                  size: 16, color: textColor?.withOpacity(0.6)),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: textColor?.withOpacity(0.6),
+              ),
               onTap: () {
                 Navigator.pushNamed(context, '/favorites');
               },
@@ -102,9 +127,14 @@ class _ProfilePageState extends State<ProfilePage> {
             Divider(color: Theme.of(context).dividerColor),
             ListTile(
               leading: const Icon(Icons.logout, color: Colors.red),
-              title: const Text("Logout",
-                  style: TextStyle(color: Colors.red)),
-              onTap: () {},
+              title: const Text("Logout", style: TextStyle(color: Colors.red)),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const AuthGate()),
+                  (route) => false,
+                );
+              },
             ),
           ],
         ),
@@ -116,10 +146,9 @@ class _ProfilePageState extends State<ProfilePage> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditProfilePage(
-          initialName: name,
-          initialEmail: email,
-        ),
+        builder:
+            (context) =>
+                EditProfilePage(initialName: name, initialEmail: email),
       ),
     );
     if (result is Map) {

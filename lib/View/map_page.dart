@@ -76,12 +76,10 @@ class _MapPageState extends State<MapPage> {
 
   void _addMarkerWithDoubleTap(LatLng point) {
     final alreadyExists = _customMarkers.any(
-      (m) =>
-          m.point.latitude == point.latitude &&
-          m.point.longitude == point.longitude,
+      (m) => m.point.latitude == point.latitude && m.point.longitude == point.longitude,
     );
 
-    if (alreadyExists) return; // не добавляем, если уже есть
+    if (alreadyExists) return;
 
     setState(() {
       _customMarkers.add(
@@ -93,15 +91,11 @@ class _MapPageState extends State<MapPage> {
             onDoubleTap: () {
               setState(() {
                 _customMarkers.removeWhere(
-                  (m) =>
-                      m.point.latitude == point.latitude &&
-                      m.point.longitude == point.longitude,
+                  (m) => m.point.latitude == point.latitude && m.point.longitude == point.longitude,
                 );
               });
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('🗑️ Marker deleted'),
-                ),
+                const SnackBar(content: Text('🗑️ Marker deleted')),
               );
             },
             child: const Icon(
@@ -116,18 +110,16 @@ class _MapPageState extends State<MapPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          '📌 Marker added: ${point.latitude}, ${point.longitude}',
-        ),
+        content: Text('📌 Marker added: ${point.latitude}, ${point.longitude}'),
       ),
     );
   }
 
   void _clearAllMarkers() {
     setState(() => _customMarkers.clear());
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('🧹 All markers deleted')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('🧹 All markers deleted')),
+    );
   }
 
   @override
@@ -150,8 +142,7 @@ class _MapPageState extends State<MapPage> {
             ),
             children: [
               TileLayer(
-                urlTemplate:
-                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 subdomains: const ['a', 'b', 'c'],
               ),
               MarkerLayer(
@@ -171,16 +162,39 @@ class _MapPageState extends State<MapPage> {
                     point: const LatLng(51.1605, 71.4704),
                     width: 60,
                     height: 60,
-                    child: const Icon(Icons.store, color: Colors.red, size: 40),
+                    child: Tooltip(
+                      message: 'TechZone',
+                      child: const Icon(
+                        Icons.store,
+                        color: Colors.red,
+                        size: 40,
+                      ),
+                    ),
                   ),
                   Marker(
                     point: const LatLng(51.1287, 71.4304),
                     width: 60,
                     height: 60,
-                    child: const Icon(
-                      Icons.electrical_services,
-                      color: Colors.green,
-                      size: 40,
+                    child: Tooltip(
+                      message: 'PowerElectro',
+                      child: const Icon(
+                        Icons.store,
+                        color: Colors.green,
+                        size: 40,
+                      ),
+                    ),
+                  ),
+                  Marker(
+                    point: const LatLng(51.1450, 71.4900),
+                    width: 60,
+                    height: 60,
+                    child: Tooltip(
+                      message: 'SmartFix',
+                      child: const Icon(
+                        Icons.store,
+                        color: Colors.purple,
+                        size: 40,
+                      ),
                     ),
                   ),
                   ..._customMarkers,
@@ -188,8 +202,6 @@ class _MapPageState extends State<MapPage> {
               ),
             ],
           ),
-
-          // Кнопки управления
           Positioned(
             right: 10,
             bottom: 100,

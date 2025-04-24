@@ -212,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                         IconButton(
                           icon: Icon(
                             isDark ? Icons.light_mode : Icons.dark_mode,
-                            color: Theme.of(context).iconTheme.color,
+                            color: Theme.of(context).iconTheme.color, 
                           ),
                           onPressed: () {
                             themeProvider.toggleTheme();
