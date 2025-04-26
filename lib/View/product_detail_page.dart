@@ -52,7 +52,7 @@ class ProductDetailPage extends StatelessWidget {
             Text(product.description),
             const SizedBox(height: 30),
 
-            // 🛒 Кнопка "Add to Cart"
+           
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -60,16 +60,19 @@ class ProductDetailPage extends StatelessWidget {
                   backgroundColor: korange,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
-                icon: const Icon(Icons.add_shopping_cart),
+                icon: const Icon(Icons.add_shopping_cart, color: Colors.white),
                 label: const Text(
-                  "Add to Cart",
-                  style: TextStyle(fontSize: 18),
+                    "Add to Cart",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 onPressed: () {
                   cartProvider.addCart(product);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('${product.name} added to cart!'),
+                      content: Text(
+                        '${product.name} added to cart!',
+                        style: const TextStyle(color: Colors.white),
+                      ),
                       duration: const Duration(seconds: 2),
                       backgroundColor: korange,
                     ),

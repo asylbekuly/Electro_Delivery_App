@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
   List<MyProductModel> allProducts = [];
   List<MyProductModel> productModel = [];
   List<CategoryModel> categories = [];
-
+  String _selectedSortCriteria = 'Alphabetical';
   @override
   void initState() {
     super.initState();
@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   // Функция для загрузки данных из Firestore
   void _loadData() async {
     FirebaseService firebaseService = FirebaseService();
+    
 
     // Получаем продукты из Firestore
     final products = await firebaseService.getProducts();
@@ -52,19 +53,26 @@ class _HomePageState extends State<HomePage> {
   void filterProductByCategory(String selectedCategory) {
     setState(() {
       category = selectedCategory;
-      // Фильтруем продукты по категории
-      productModel =
-          allProducts
-              .where(
-                (element) =>
-                    element.category.toLowerCase() ==
-                    selectedCategory.toLowerCase(),
-              )
-              .toList();
+      productModel = allProducts
+          .where(
+            (element) =>
+                element.category.toLowerCase() == selectedCategory.toLowerCase(),
+          )
+          .toList();
+    });
+    sortProducts(_selectedSortCriteria);
+  }
+  void sortProducts(String sortBy) {
+    setState(() {
+      if (sortBy == "Alphabetical") {
+        productModel.sort((a, b) => a.name.compareTo(b.name));
+      } else if (sortBy == "Price") {
+        productModel.sort((a, b) => a.price.compareTo(b.price));
+      }
     });
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -141,7 +149,6 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: _iconButton(Icons.search, context),
                         ),
-
                         const SizedBox(width: 6),
 
                         Consumer<FavoriteProvider>(
@@ -259,6 +266,29 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 25),
 
+              // Сортировка
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: DropdownButton<String>(
+                  value: _selectedSortCriteria,
+                  items: <String>['Alphabetical', 'Price']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedSortCriteria = newValue!;
+                      sortProducts(_selectedSortCriteria);
+                    });
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
               // Категории
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -360,7 +390,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Widget _iconButton(IconData icon, BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10),
