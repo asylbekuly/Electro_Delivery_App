@@ -10,6 +10,7 @@ import 'package:food_delivery_app/consts.dart';
 import 'package:food_delivery_app/Provider/firebase_service.dart';
 import 'package:food_delivery_app/View/favorites_page.dart';
 import 'package:food_delivery_app/Provider/favorite_provider.dart';
+import 'package:food_delivery_app/View/product_detail_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -121,7 +122,26 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _iconButton(Icons.search, context),
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20),
+                                ),
+                              ),
+                              builder: (_) {
+                                return SearchModal(allProducts: allProducts);
+                              },
+                            );
+                          },
+                          child: _iconButton(Icons.search, context),
+                        ),
+
                         const SizedBox(width: 6),
 
                         Consumer<FavoriteProvider>(
@@ -212,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                         IconButton(
                           icon: Icon(
                             isDark ? Icons.light_mode : Icons.dark_mode,
-                            color: Theme.of(context).iconTheme.color, 
+                            color: Theme.of(context).iconTheme.color,
                           ),
                           onPressed: () {
                             themeProvider.toggleTheme();
@@ -350,6 +370,113 @@ class _HomePageState extends State<HomePage> {
         border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Icon(icon, color: Theme.of(context).iconTheme.color),
+    );
+  }
+}
+
+class SearchModal extends StatefulWidget {
+  final List<MyProductModel> allProducts;
+
+  const SearchModal({super.key, required this.allProducts});
+
+  @override
+  State<SearchModal> createState() => _SearchModalState();
+}
+
+class _SearchModalState extends State<SearchModal> {
+  late List<MyProductModel> filteredProducts;
+  String searchQuery = "";
+
+  @override
+  void initState() {
+    super.initState();
+    filteredProducts = widget.allProducts;
+  }
+
+  void updateSearch(String query) {
+    setState(() {
+      searchQuery = query;
+      filteredProducts =
+          widget.allProducts
+              .where(
+                (product) =>
+                    product.name.toLowerCase().contains(query.toLowerCase()),
+              )
+              .toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: MediaQuery.of(context).viewInsets,
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.8,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            // Поле поиска
+            TextField(
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: "Search products...",
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onChanged: updateSearch,
+            ),
+            const SizedBox(height: 20),
+
+            // Список результатов
+            Expanded(
+              child:
+                  filteredProducts.isEmpty
+                      ? const Center(child: Text("No products found"))
+                      : ListView.separated(
+                        itemCount: filteredProducts.length,
+                        separatorBuilder: (_, __) => const Divider(),
+                        itemBuilder: (context, index) {
+                          final product = filteredProducts[index];
+                          return ListTile(
+                            leading: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.grey.shade200,
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: Image.network(
+                                product.image,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.broken_image);
+                                },
+                              ),
+                            ),
+
+                            title: Text(product.name),
+                            subtitle: Text("\$${product.price.toString()}"),
+                            onTap: () {
+                              Navigator.pop(context); // Закрыть поиск
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) =>
+                                          ProductDetailPage(product: product),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
