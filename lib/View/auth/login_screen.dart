@@ -23,7 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      // AuthGate will handle navigation
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login failed: $e')));
     } finally {
@@ -57,6 +56,37 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Google Sign-In failed: $e')));
+    }
+  }
+
+  Future<void> signInWithGitHub() async {
+    try {
+      if (!kIsWeb) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('GitHub Sign-In is only supported on Web')),
+        );
+        return;
+      }
+
+      final githubProvider = GithubAuthProvider();
+
+      final userCredential = await FirebaseAuth.instance.signInWithPopup(githubProvider);
+
+      final user = userCredential.user;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'email': user.email,
+          'name': user.displayName ?? '',
+        }, SetOptions(merge: true));
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('✅ Signed in with GitHub')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('GitHub Sign-In failed: $e')),
+      );
     }
   }
 
@@ -98,7 +128,14 @@ class _LoginScreenState extends State<LoginScreen> {
               label: Text("Sign in with Google"),
               onPressed: signInWithGoogle,
               style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
-            )
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton.icon(
+              icon: Icon(Icons.code),
+              label: Text("Sign in with GitHub"),
+              onPressed: signInWithGitHub,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+            ),
           ],
         ),
       ),

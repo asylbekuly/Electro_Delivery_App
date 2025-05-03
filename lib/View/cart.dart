@@ -6,9 +6,17 @@ import 'package:food_delivery_app/consts.dart';
 import 'package:provider/provider.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:lottie/lottie.dart';
 
-class Cart extends StatelessWidget {
+class Cart extends StatefulWidget {
   const Cart({super.key});
+
+  @override
+  State<Cart> createState() => _CartState();
+}
+
+class _CartState extends State<Cart> {
+  bool isPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +36,7 @@ class Cart extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Theme.of(context).dividerColor),
+                      border: Border.all(color: Theme.of(context).dividerColor),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Padding(
@@ -38,8 +45,7 @@ class Cart extends StatelessWidget {
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Icon(Icons.arrow_back,
-                            color: Theme.of(context).iconTheme.color),
+                        child: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
                       ),
                     ),
                   ),
@@ -56,45 +62,157 @@ class Cart extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ...List.generate(
-                      carts.length,
-                      (index) => Dismissible(
-                        key: ValueKey(carts[index].productModel.name),
-                        direction: DismissDirection.endToStart,
-                        background: Container(
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 20),
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.red.shade400,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child:
-                              const Icon(Icons.delete, color: Colors.white),
+              child: carts.isEmpty
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 80),
+                        Lottie.asset('assets/empty_cart.json', width: 200, height: 200),
+                        const SizedBox(height: 20),
+                        const Text(
+                          "Your cart is empty",
+                          style: TextStyle(fontSize: 18, color: Colors.grey),
                         ),
-                        onDismissed: (direction) {
-                          Provider.of<CartProvider>(context, listen: false)
-                              .removeCart(carts[index].productModel);
-                        },
-                        child: Container(
-                          height: 145,
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.only(
-                            top: index == 0 ? 30 : 0,
-                            right: 25,
-                            left: 25,
-                            bottom: 30,
+                      ],
+                    )
+                  : SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ...List.generate(
+                            carts.length,
+                            (index) => Dismissible(
+                              key: ValueKey(carts[index].productModel.name),
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 20),
+                                margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.shade400,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: const Icon(Icons.delete, color: Colors.white),
+                              ),
+                              onDismissed: (direction) {
+                                Provider.of<CartProvider>(context, listen: false)
+                                    .removeCart(carts[index].productModel);
+                              },
+                              child: Container(
+                                height: 145,
+                                width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.only(
+                                  top: index == 0 ? 30 : 0,
+                                  right: 25,
+                                  left: 25,
+                                  bottom: 30,
+                                ),
+                                child: FadeInUp(
+                                  delay: Duration(milliseconds: (index + 1) * 200),
+                                  child: CartItems(cart: carts[index]),
+                                ),
+                              ),
+                            ),
                           ),
-                          child: FadeInUp(
-                            delay: Duration(milliseconds: (index + 1) * 200),
-                            child: CartItems(cart: carts[index]),
+                        ],
+                      ),
+                    ),
+            ),
+            if (carts.isNotEmpty)
+              Container(
+                color: Theme.of(context).cardColor,
+                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Delivery",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: DottedLine(
+                            dashLength: 10,
+                            dashColor: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .color!
+                                .withOpacity(0.5),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        const Text(
+                          "\$5.99",
+                          style: TextStyle(
+                            color: korange,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Text(
+                          "Total Order",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: DottedLine(
+                            dashLength: 10,
+                            dashColor: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .color!
+                                .withOpacity(0.5),
+                          ),
+                        ),
+                        Text(
+                          "\$${(cartProvider.totalCart()).toStringAsFixed(2)}",
+                          style: const TextStyle(
+                            color: korange,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 40),
+                    GestureDetector(
+                      onTapDown: (_) => setState(() => isPressed = true),
+                      onTapUp: (_) => setState(() => isPressed = false),
+                      onTapCancel: () => setState(() => isPressed = false),
+                      onTap: () {
+                        // логика оплаты
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        height: isPressed ? 70 : 75,
+                        width: MediaQuery.of(context).size.width - 50,
+                        decoration: BoxDecoration(
+                          color: isPressed ? Colors.green : kblack,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          " Pay \$${(cartProvider.totalCart() + 5.99).toStringAsFixed(2)}",
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -102,99 +220,6 @@ class Cart extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-            Container(
-              color: Theme.of(context).cardColor,
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        "Delivery",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color:
-                              Theme.of(context).textTheme.bodyLarge!.color,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: DottedLine(
-                          dashLength: 10,
-                          dashColor: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .color!
-                              .withOpacity(0.5),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      const Text(
-                        "\$5.99",
-                        style: TextStyle(
-                          color: korange,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Text(
-                        "Total Order",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color:
-                              Theme.of(context).textTheme.bodyLarge!.color,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: DottedLine(
-                          dashLength: 10,
-                          dashColor: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .color!
-                              .withOpacity(0.5),
-                        ),
-                      ),
-                      Text(
-                        "\$${(cartProvider.totalCart()).toStringAsFixed(2)}",
-                        style: const TextStyle(
-                          color: korange,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 40),
-                  MaterialButton(
-                    onPressed: () {},
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    color: kblack,
-                    height: 75,
-                    minWidth: MediaQuery.of(context).size.width - 50,
-                    child: Text(
-                      " Pay \$${(cartProvider.totalCart() + 5.99).toStringAsFixed(2)}",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),

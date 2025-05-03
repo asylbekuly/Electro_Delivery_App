@@ -15,9 +15,7 @@ class ProductDetailPage extends StatelessWidget {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(product.name),
-      ),
+      appBar: AppBar(title: Text(product.name)),
 
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -30,8 +28,9 @@ class ProductDetailPage extends StatelessWidget {
                 child: Image.asset(
                   product.image,
                   height: 200,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.broken_image, size: 100),
+                  errorBuilder:
+                      (context, error, stackTrace) =>
+                          const Icon(Icons.broken_image, size: 100),
                 ),
               ),
             ),
@@ -47,12 +46,14 @@ class ProductDetailPage extends StatelessWidget {
             const SizedBox(height: 10),
             Text("Distance: ${product.distance}m"),
             const SizedBox(height: 20),
-            Text("Description:", style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              "Description:",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 5),
             Text(product.description),
             const SizedBox(height: 30),
 
-           
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -62,8 +63,8 @@ class ProductDetailPage extends StatelessWidget {
                 ),
                 icon: const Icon(Icons.add_shopping_cart, color: Colors.white),
                 label: const Text(
-                    "Add to Cart",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  "Add to Cart",
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 onPressed: () {
                   cartProvider.addCart(product);
@@ -91,7 +92,21 @@ class ProductDetailPage extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => const Cart()),
+            PageRouteBuilder(
+              transitionDuration: const Duration(milliseconds: 500),
+              pageBuilder: (_, __, ___) => const Cart(),
+              transitionsBuilder: (_, animation, __, child) {
+                const begin = Offset(0.0, 1.0); // Снизу вверх
+                const end = Offset.zero;
+                final tween = Tween(
+                  begin: begin,
+                  end: end,
+                ).chain(CurveTween(curve: Curves.easeInOut));
+                final offsetAnimation = animation.drive(tween);
+
+                return SlideTransition(position: offsetAnimation, child: child);
+              },
+            ),
           );
         },
       ),

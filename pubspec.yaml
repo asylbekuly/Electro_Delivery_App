@@ -32,6 +32,7 @@ dependencies:
   shared_preferences: ^2.2.2
   firebase_auth: ^4.17.6
   google_sign_in: ^6.2.1
+  lottie: ^2.6.0
 
 dev_dependencies:
   flutter_test:
@@ -47,6 +48,7 @@ flutter:
   # Asset paths
   assets:
     - assets/
+    - assets/empty_cart.json
     - assets/food-delivery(foodel)/
     - assets/food-delivery(foodel)/ramen/
     - assets/food-delivery(foodel)/burger/
@@ -55,5 +57,6 @@ flutter:
     - assets/food-delivery(foodel)/tablet.png
     - assets/food-delivery(foodel)/watch.png
     - assets/food-delivery(foodel)/me2024.jpg
+   
 
 

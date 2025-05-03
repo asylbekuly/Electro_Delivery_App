@@ -24,11 +24,17 @@ class FoodProductItems extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailPage(product: productModel),
+          PageRouteBuilder(
+            transitionDuration: Duration(milliseconds: 500),
+            pageBuilder:
+                (_, __, ___) => ProductDetailPage(product: productModel),
+            transitionsBuilder: (_, animation, __, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
           ),
         );
       },
+
       child: Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: [
